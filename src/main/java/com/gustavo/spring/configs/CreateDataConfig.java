@@ -2,6 +2,7 @@ package com.gustavo.spring.configs;
 
 import com.gustavo.spring.domain.Order;
 import com.gustavo.spring.domain.User;
+import com.gustavo.spring.domain.enums.OrderStatus;
 import com.gustavo.spring.repositories.OrderRepository;
 import com.gustavo.spring.repositories.UserRepository;
 import net.datafaker.Faker;
@@ -57,6 +58,7 @@ public class CreateDataConfig implements CommandLineRunner {
                 var order = Order.builder()
                         .client(user)
                         .moment(Instant.now())
+                        .orderStatus(OrderStatus.PAID)
                         .build();
 
                 orders.add(order);

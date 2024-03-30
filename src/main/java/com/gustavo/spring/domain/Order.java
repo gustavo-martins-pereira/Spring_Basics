@@ -2,6 +2,7 @@ package com.gustavo.spring.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gustavo.spring.domain.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,9 @@ public class Order {
     @JoinColumn(name = "client_id")
     @JsonIgnoreProperties(value = "orders")
     private User client;
+
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatus orderStatus;
 
     @CreationTimestamp
     public Instant createdAt;
