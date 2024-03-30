@@ -1,8 +1,10 @@
 package com.gustavo.spring.configs;
 
+import com.gustavo.spring.domain.Category;
 import com.gustavo.spring.domain.Order;
 import com.gustavo.spring.domain.User;
 import com.gustavo.spring.domain.enums.OrderStatus;
+import com.gustavo.spring.repositories.CategoryRepository;
 import com.gustavo.spring.repositories.OrderRepository;
 import com.gustavo.spring.repositories.UserRepository;
 import net.datafaker.Faker;
@@ -18,10 +20,13 @@ import java.util.List;
 public class CreateDataConfig implements CommandLineRunner {
 
     @Autowired
-    private UserRepository userRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final Faker randomData = new Faker();
 
@@ -32,6 +37,10 @@ public class CreateDataConfig implements CommandLineRunner {
 
         userRepository.saveAll(users);
         orderRepository.saveAll(orders);
+
+        var categories = createCategories(4);
+
+        categoryRepository.saveAll(categories);
     }
 
     private List<User> createUsers(int quantity) {
@@ -66,6 +75,19 @@ public class CreateDataConfig implements CommandLineRunner {
         });
 
         return orders;
+    }
+
+    private List<Category> createCategories(int quantity) {
+        List<Category> categories = new ArrayList<>();
+
+        for (int i = 0; i < quantity; i++) {
+            categories.add(Category.builder()
+                    .name(randomData.commerce().material())
+                    .build()
+            );
+        }
+
+        return categories;
     }
 
 }
