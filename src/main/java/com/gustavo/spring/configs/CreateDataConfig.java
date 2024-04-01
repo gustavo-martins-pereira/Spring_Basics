@@ -5,10 +5,10 @@ import com.gustavo.spring.domain.Order;
 import com.gustavo.spring.domain.Product;
 import com.gustavo.spring.domain.User;
 import com.gustavo.spring.domain.enums.OrderStatus;
-import com.gustavo.spring.repositories.CategoryRepository;
-import com.gustavo.spring.repositories.OrderRepository;
-import com.gustavo.spring.repositories.ProductRepository;
-import com.gustavo.spring.repositories.UserRepository;
+import com.gustavo.spring.domain.relationship.OrderItemRelationship;
+import com.gustavo.spring.domain.relationship.pks.OrderItemPK;
+import com.gustavo.spring.repositories.*;
+import jakarta.persistence.EntityManager;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,6 +28,9 @@ public class CreateDataConfig implements CommandLineRunner {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRelationshipRepository orderItemRelationshipRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -66,7 +69,6 @@ public class CreateDataConfig implements CommandLineRunner {
         orderRepository.saveAll(orders);
 
 
-
         int categoriesQuantity = 4;
         var categories = createCategories(categoriesQuantity);
         int productsQuantity = 10;
@@ -82,6 +84,21 @@ public class CreateDataConfig implements CommandLineRunner {
 
         categoryRepository.saveAll(categories);
         productRepository.saveAll(products);
+
+        int orderItemQuantity = 4;
+        var orderItemRelationships = createOrderItemRelationship(orderItemQuantity);
+
+        orderItemRelationships.forEach(orderItemRelationship -> {
+            OrderItemPK orderItemPK = OrderItemPK.builder()
+                    .order(orders.get(orders.size() - 1))
+                    .product(products.get(products.size() - 1))
+                    .build();
+
+            orderItemRelationship.setId(orderItemPK);
+            orderItemRelationship.setPrice(orderItemPK.getProduct().getPrice());
+        });
+
+        orderItemRelationshipRepository.saveAll(orderItemRelationships);
     }
 
     private List<User> createUsers(int quantity) {
@@ -141,6 +158,19 @@ public class CreateDataConfig implements CommandLineRunner {
         }
 
         return products;
+    }
+
+    private List<OrderItemRelationship> createOrderItemRelationship(int quantity) {
+        List<OrderItemRelationship> orderItemRelationships = new ArrayList<>();
+
+        for (int i = 0; i < quantity; i++) {
+            orderItemRelationships.add(OrderItemRelationship.builder()
+                    .quantity(random.nextInt(5) + 1)
+                    .build()
+            );
+        }
+
+        return orderItemRelationships;
     }
 
 }
