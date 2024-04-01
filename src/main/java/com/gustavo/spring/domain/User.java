@@ -1,15 +1,10 @@
 package com.gustavo.spring.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.generator.EventType;
-import org.springframework.context.annotation.Lazy;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -20,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
 @Entity(name = "users")
 public class User {
 

@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
@@ -34,7 +35,11 @@ public class CreateDataConfig implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
 
+
     private final Faker faker = new Faker();
+
+    private final Random random = new Random();
+
 
     @Override
     public void run(String... args) {
@@ -57,14 +62,23 @@ public class CreateDataConfig implements CommandLineRunner {
             }
         });
 
-
         userRepository.saveAll(users);
         orderRepository.saveAll(orders);
 
-        var categories = createCategories(4);
-        var products = createProducts(10);
 
-        System.out.println(products);
+
+        int categoriesQuantity = 4;
+        var categories = createCategories(categoriesQuantity);
+        int productsQuantity = 10;
+        var products = createProducts(productsQuantity);
+
+        products.forEach(product -> {
+            int randomIndex = random.nextInt(categoriesQuantity);
+            var category = categories.get(randomIndex);
+
+            product.getCategories().add(category);
+            category.getProducts().add(product);
+        });
 
         categoryRepository.saveAll(categories);
         productRepository.saveAll(products);
@@ -90,12 +104,11 @@ public class CreateDataConfig implements CommandLineRunner {
         List<Order> orders = new ArrayList<>();
 
         for (int i = 0; i < quantity; i++) {
-            var order = Order.builder()
+            orders.add(Order.builder()
                     .moment(Instant.now())
                     .orderStatus(OrderStatus.PAID)
-                    .build();
-
-            orders.add(order);
+                    .build()
+            );
         }
 
         return orders;

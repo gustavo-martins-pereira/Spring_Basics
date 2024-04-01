@@ -1,9 +1,7 @@
 package com.gustavo.spring.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
@@ -14,6 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
 @Entity(name = "categories")
 public class Category {
 
@@ -22,7 +21,9 @@ public class Category {
     private UUID id;
     private String name;
 
-//    @Setter(AccessLevel.NONE)
-//    private Set<Product> products = new HashSet<>();
+    @Setter(AccessLevel.NONE)
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnoreProperties(value = "categories")
+    private final Set<Product> products = new HashSet<>();
 
 }

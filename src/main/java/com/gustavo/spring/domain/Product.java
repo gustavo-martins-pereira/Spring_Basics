@@ -1,9 +1,7 @@
 package com.gustavo.spring.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
 @Entity(name = "products")
 public class Product {
 
@@ -29,8 +28,15 @@ public class Product {
     private Double price;
     private String imgUrl;
 
-//    @Setter(AccessLevel.NONE)
-//    private Set<Category> categories = new HashSet<>();
+    @Setter(AccessLevel.NONE)
+    @ManyToMany
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @JsonIgnoreProperties(value = "products")
+    private final Set<Category> categories = new HashSet<>();
 
     @CreationTimestamp
     private Instant createdAt;

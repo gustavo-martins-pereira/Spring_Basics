@@ -1,7 +1,7 @@
 package com.gustavo.spring.controllers;
 
 import com.gustavo.spring.domain.Product;
-import com.gustavo.spring.useCases.category.GetAllProductsUsecase;
+import com.gustavo.spring.useCases.product.GetAllProductsUsecase;
 import com.gustavo.spring.useCases.product.GetProductByIdUsecase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ import java.util.UUID;
 public class ProductController {
 
     @Autowired
-    private GetAllProductsUsecase getAllCategoriesUsecase;
+    private GetAllProductsUsecase getAllProductsUsecase;
 
     @Autowired
     private GetProductByIdUsecase getProductByIdUsecase;
 
     @GetMapping
-    public List<Product> getAllProduct() { return getAllCategoriesUsecase.execute(); }
+    public List<Product> getAllProduct() { return getAllProductsUsecase.execute(); }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable UUID id) {
