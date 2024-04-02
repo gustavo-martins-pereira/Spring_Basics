@@ -89,9 +89,11 @@ public class CreateDataConfig implements CommandLineRunner {
         var orderItemRelationships = createOrderItemRelationship(orderItemQuantity);
 
         orderItemRelationships.forEach(orderItemRelationship -> {
+            Order order = orders.get(random.nextInt(orders.size() - 1));
+            Product product = products.get(random.nextInt(products.size() - 1));
             OrderItemPK orderItemPK = OrderItemPK.builder()
-                    .order(orders.get(orders.size() - 1))
-                    .product(products.get(products.size() - 1))
+                    .order(order)
+                    .product(product)
                     .build();
 
             orderItemRelationship.setId(orderItemPK);
